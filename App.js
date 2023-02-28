@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, DynamicColorIOS, FlatList, Button, Image, Animated, ProgressViewIOSComponent} from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, View, DynamicColorIOS, FlatList, Button, Image, Animated} from 'react-native';
+import { useState, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar'; //damit Urhzeit usw nicht mit schwarzem Background überschrieben wird
 
 import CarItem from './components/CarItem';
@@ -9,18 +9,15 @@ import CarInput from './components/CarInput';
 export default function App() {                           //Hauptkomponente der App für Expo
   const [coolCars, setCoolCars] = useState([]);
   const [modalIsVisible, setModalIsVisible] = useState(false);  //UseState(false) zeigt, dass Modal inizial nicht gezeigt werden soll
-  type FadeInViewProps = PropsWithChildren<{style: ViewStyle}>;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const FadeInView: React.FC<FadeInViewProps> = props => {
-    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-  
-    useEffect(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 10000,
-        useNativeDriver: true,
-      }).start();
-    }, [fadeAnim]);
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 10000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
 
   function startAddCarHandler (){       //wenn AddCarHandler gestartet wird dann wird setModualVisible true und Modal screen wird damit angezeigt
@@ -52,16 +49,14 @@ function deleteCarHandler(id){  // Funktion um zu löschen definiert, Verlinkung
     <StatusBar style='light'/>
     <View style={styles.appContainer}>
       
-
-      <Animated.View 
-      style={{ 
-        ...props.style,
-        opacity: fadeAnim}}> 
-        <Image source={require('../CoolCarsX/assets/images/nice.png')}
+    <Animated.View // Special animatable View
+      style={{
+        opacity: fadeAnim, // Bind opacity to animated value
+      }}>
+       <Image source={require('../CoolCarsX/assets/images/nice.png')}
          style={{width: 350, height: 200, margin: 50}}
          />
-          {props.children}
-        </Animated.View> 
+    </Animated.View>
 
 
       <Button
@@ -119,11 +114,6 @@ const styles = StyleSheet.create({
     flex: 5,
   },
 
-  Image2:{
-    width: '70%',
-    height: '20%',
-    margin: 40 // blabla
-  }
 
 });
 
