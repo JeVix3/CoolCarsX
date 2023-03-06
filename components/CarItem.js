@@ -2,11 +2,11 @@ import React from 'react';
 import {StyleSheet, View, Text, Pressable, ImageBackground} from 'react-native';    //anlegen einzelner js componenten(Dateien), einbinden damit Style übernommen wird, sobald view und text drin ist neu importieren, anders als bei anderen programmiersprachen h2.
 
 
-function CarItem(props) {                               //props object einfügen, text property ist für text verantwortlich, pressable an der stelle macht dass listeneinträge pressable sind
+function CarItem(props) {                                            //props object einfügen, text property ist für text verantwortlich, pressable an der stelle macht dass listeneinträge pressable sind
     return (                        
         <View style={styles.carItem}> 
           <Pressable
-          android_ripple={{ color:'red'}}  //// über bind (standard java script) kann funktion vorkonfigurieren für die zukünftige Ausführung, ripple effekt bei Android beim löschen/tippen
+          android_ripple={{ color:'red'}}                               //// über bind (standard java script) kann funktion vorkonfigurieren für die zukünftige Ausführung, ripple effekt bei Android beim löschen/tippen
           onPress={props.onDeleteItem.bind(this, props.id)}
           style={({ pressed }) => pressed && styles.pressedItem}
           >     

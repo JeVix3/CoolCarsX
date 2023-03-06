@@ -1,14 +1,22 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, DynamicColorIOS, FlatList, Button, Image, Animated} from 'react-native';
-import { useState, useRef } from 'react';
-import { StatusBar } from 'expo-status-bar'; //damit Urhzeit usw nicht mit schwarzem Background überschrieben wird
+import React, { useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Button,
+  Image,
+  Animated,
+} from "react-native";
+import { useState, useRef } from "react";
+import { StatusBar } from "expo-status-bar"; //damit Menü-Bar nicht mit schwarzem Background überschrieben wird
 
-import CarItem from './components/CarItem';
-import CarInput from './components/CarInput';
+import CarItem from "./components/CarItem";
+import CarInput from "./components/CarInput";
 
-export default function App() {                           //Hauptkomponente der App für Expo
+export default function App() {
+  //Hauptkomponente der App für Expo
   const [coolCars, setCoolCars] = useState([]);
-  const [modalIsVisible, setModalIsVisible] = useState(false);  //UseState(false) zeigt, dass Modal inizial nicht gezeigt werden soll
+  const [modalIsVisible, setModalIsVisible] = useState(false); //UseState(false) zeigt, dass Modal inizial nicht gezeigt werden soll
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -19,101 +27,89 @@ export default function App() {                           //Hauptkomponente der 
     }).start();
   }, [fadeAnim]);
 
-
-  function startAddCarHandler (){       //wenn AddCarHandler gestartet wird dann wird setModualVisible true und Modal screen wird damit angezeigt
+  function startAddCarHandler() {
+    //wenn AddCarHandler gestartet wird, dann wird setModualVisible true und Modal screen wird damit angezeigt
     setModalIsVisible(true);
-    
-  }
-  
-  function endAddCarHandler(){
-  setModalIsVisible(false);
   }
 
-  function addCarHandler (enteredCarText) {
+  function endAddCarHandler() {
+    setModalIsVisible(false);
+  }
+
+  function addCarHandler(enteredCarText) {
     setCoolCars((currentCoolCars) => [
       ...currentCoolCars,
-      { text: enteredCarText, id: Math.random().toString() }, //key anlegen damit unique listeneinträge
+      { text: enteredCarText, id: Math.random().toString() }, //key anlegen damit unique Listeneinträge
     ]);
     endAddCarHandler();
   }
-  
-function deleteCarHandler(id){  // Funktion um zu löschen definiert, Verlinkung zu CarItem siehe unten, ohne id wird nur in console angezeigt, dass etwas gelöscht wird, es würde visuelle Rückmeldung fehlen
-  setCoolCars(currentCoolCars => {
-    return currentCoolCars.filter((car) => car.id !== id); //Funktion gibt true zurück wenn  , Funktion gibt false zurück, wenn Id die ist, die auch gelöscht werden soll
-  });
-}
+
+  function deleteCarHandler(id) {
+    // ohne ID wird nur in console angezeigt, dass etwas gelöscht wird, es fehlt visuelle Rückmeldung in der App UI
+    setCoolCars((currentCoolCars) => {
+      return currentCoolCars.filter((car) => car.id !== id); //Funktion gibt false zurück, wenn Id die ist, die auch gelöscht werden soll
+    });
+  }
 
   return (
-    
     <>
-    <StatusBar style='light'/>
-    <View style={styles.appContainer}>
-      
-    <Animated.View // Special animatable View
-      style={{
-        opacity: fadeAnim, // Bind opacity to animated value
-      }}>
-       <Image source={require('../CoolCarsX/assets/images/nice.png')}
-         style={{width: 350, height: 200, margin: 50}}
-         />
-    </Animated.View>
+      <StatusBar style="light" />
+      <View style={styles.appContainer}>
+        <Animated.View // Animation
+          style={{
+            opacity: fadeAnim,
+          }}
+        >
+          <Image
+            source={require("../CoolCarsX/assets/images/nice.png")}
+            style={{ width: 350, height: 200, margin: 50 }}
+          />
+        </Animated.View>
 
+        <Button
+          title="You checked out another cool car? Click here to add it to your list or tap to remove!"
+          color="grey"
+          onPress={startAddCarHandler}
+        />
 
-      <Button
-      title='You checked out another cool car? Click here to add it to your list or tap to remove!'
-      color='darkgrey'
-      onPress={startAddCarHandler}
-     /> 
-  
-     <CarInput
-     visible={modalIsVisible}
-     onAddCar={addCarHandler}
-     onCancel={endAddCarHandler}
-     /> 
+        <CarInput
+          visible={modalIsVisible}
+          onAddCar={addCarHandler}
+          onCancel={endAddCarHandler}
+        />
 
-     <View style={styles.carsContainer}>
-
-     <FlatList                                      //für performance von langen listen zum rendern, Zeile 26: verknüpfung mit Funktion vom Modal Screen über on Press Prop
-     data={coolCars}                                //als Wert mitgeben, damit Flatlist weiß, was ausgegeben werden muss
-     renderItem={(itemData) => {
-      return (
-
-      <CarItem text={itemData.item.text}
-      id={itemData.item.id}                        // über id können Listeneinträge gelöscht werden
-      onDeleteItem={deleteCarHandler}
-      />
-      
-      );                                          //Löschfunktion verknüpft
-     }}
-     keyExtractor={(item, index) => {
-      return item.id;
-    
-     }}
-    />
-    </View>
-    </View>
-    
+        <View style={styles.carsContainer}>
+          <FlatList //für performance von langen Listen zum rendern
+            data={coolCars} //als Wert mitgeben, damit Flatlist weiß, was ausgegeben werden muss
+            renderItem={(itemData) => {
+              return (
+                <CarItem
+                  text={itemData.item.text}
+                  id={itemData.item.id} // über ID können Listeneinträge gelöscht werden
+                  onDeleteItem={deleteCarHandler}
+                />
+              );
+            }}
+            keyExtractor={(item, index) => {
+              return item.id;
+            }}
+          />
+        </View>
+      </View>
     </>
   );
-    }
+}
 
 const styles = StyleSheet.create({
   appContainer: {
     paddingTop: 120,
     paddingHorizontal: 20,
     flex: 1,
-    backgroundColor: 'black',
-    color: 'red',
-    dark: 'darkgray',
-    light: 'lightgray',
-    highContrastDark: 'black',
-    highContrastLight: 'white',
+    backgroundColor: "black",
+    color: "golden",
   },
-  
+
   carsContainer: {
     flex: 5,
   },
-
-
 });
-

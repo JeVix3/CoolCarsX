@@ -1,4 +1,4 @@
-import { useState } from 'react'; // erlaubt es use State funktion zu nutzen
+import { useState } from 'react'; // erlaubt es use State Funktion zu nutzen
 import { View, TextInput, Button, StyleSheet, Modal, Image} from 'react-native';
 
 
@@ -9,11 +9,12 @@ function CarInput(props) {
         setEnteredCarText(enteredText);
       }
 
-      function addCarHandler() {    //selber Name in react kein Probem da unterschiedliche Komponents
+      function addCarHandler() {    //selber Name in react kein Probem da unterschiedliche Components
         props.onAddCar(enteredCarText);
         setEnteredCarText('');
       }      
 
+      
     return (
       <Modal visible ={props.visible} animationType="slide"> 
         <View style={styles.inputContainer}>
@@ -42,9 +43,9 @@ export default CarInput;
 
 const styles = StyleSheet.create({
     inputContainer: {
-        // flexDirection: 'column',   eh Standard
+        // flexDirection: 'column'
         justifyContent:'center',
-        alignItems: 'center', //zentriert Schrift in button
+        alignItems: 'center', //zentriert Schrift in Button
         flex: 1,
         padding: 15,
         backgroundColor: 'black',
